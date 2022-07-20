@@ -43,7 +43,9 @@ class controllerUser {
     static async login(req, res) {
         const { usernameEmail, password } = req.body;
         let user = await userServiceModel.findUserByUsername(usernameEmail);
-        (!user) ? user = await userServiceModel.findUserByEmail(usernameEmail) : null;
+        if(!user) {
+            user = await userServiceModel.findUserByEmail(usernameEmail);
+        }
         (!user) ? res.status(400).json({message: 'Username or Email did not exist'}) :
         bcrypt.compare(password, user.password , (err, result) => {
             if (err) {
